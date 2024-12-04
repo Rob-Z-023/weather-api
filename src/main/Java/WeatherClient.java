@@ -6,7 +6,7 @@ import java.net.http.HttpResponse;
 
 public class WeatherClient {
     private final String APPID;
-    private HttpClient Client;
+    private final HttpClient Client;
     private static final String BASE_URL = "http://api.openweathermap.org/geo/1.0/direct?q=";
 
     public WeatherClient(String appid) {
@@ -30,9 +30,9 @@ public class WeatherClient {
         return response;
     }
 
-    public HttpResponse<String> getCoordinates(String location){
+    public String getCoordinates(String location){
         String uri = BASE_URL + location + "&appid=" + APPID;
-        return getCoordinates(URI.create(uri));
+        return getCoordinates(URI.create(uri)).body();
     }
 
 //    HttpResponse<String> getCoordinates(String location, int stateCode){
