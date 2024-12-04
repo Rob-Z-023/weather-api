@@ -35,10 +35,8 @@ public class WeatherClient {
         return getCoordinates(URI.create(uri));
     }
 
-//    // it is more likely for two country to have the same city name, therefore this overload is chosen over
-//    // the state code overload
-//    HttpResponse<String> getCoordinates(String location, int countryCode){
-//        String uri = BASE_URL + location + "," + countryCode + "&appid=" + APPID;
+//    HttpResponse<String> getCoordinates(String location, int stateCode){
+//        String uri = BASE_URL + location + "," + stateCode + "&appid=" + APPID;
 //        return getCoordinates(URI.create(uri));
 //    }
 //
