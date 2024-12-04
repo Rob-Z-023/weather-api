@@ -7,7 +7,8 @@ import java.net.http.HttpResponse;
 public class WeatherClient {
     private final String APPID;
     private final HttpClient Client;
-    private static final String BASE_URL = "http://api.openweathermap.org/geo/1.0/direct?q=";
+    private static final String BASE_CORD_URL = "http://api.openweathermap.org/geo/1.0/direct?q=";
+    private static final String BASE_WEATHER_URL = "https://api.openweathermap.org/data/2.5/weather?";
 
     public WeatherClient(String appid) {
         this.APPID = appid;
@@ -15,33 +16,34 @@ public class WeatherClient {
     }
 
     // http get handler
-    private HttpResponse<String> getCoordinates(URI uri) {
+    private HttpResponse<String> getHTML(URI uri) {
+        // building html request
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(uri)
                 .GET().build();
+
+        // sending request and receiving response
         HttpResponse<String> response = null;
         try{
             response = Client.send(request, HttpResponse.BodyHandlers.ofString());
         }
         catch(IOException | InterruptedException e){
-            System.out.println("Coordinates connection failed.");
+            System.out.println("GET request failed.");
             e.printStackTrace();
         }
         return response;
     }
 
+    // return the response body of the Coordinates get request
     public String getCoordinates(String location){
-        String uri = BASE_URL + location + "&appid=" + APPID;
-        return getCoordinates(URI.create(uri)).body();
+        String uri = BASE_CORD_URL + location + "&appid=" + APPID;
+        return getHTML(URI.create(uri)).body();
     }
 
-//    HttpResponse<String> getCoordinates(String location, int stateCode){
-//        String uri = BASE_URL + location + "," + stateCode + "&appid=" + APPID;
-//        return getCoordinates(URI.create(uri));
-//    }
-//
-//    HttpResponse<String> getCoordinates(String location, int countryCode, int stateCode){
-//        String uri = BASE_URL + location + "," + stateCode + "," + countryCode + "&appid=" + APPID;
-//        return getCoordinates(URI.create(uri));
-//    }
+    // return the response body of the Weather get request
+    public String getWeather(Coordinates coordinates){
+        String uri = BASE_WEATHER_URL + "lat=" + coordinates.getLatidude() + "&lon=" + coordinates.getLogtidue()
+                + "&appid=" + APPID;
+        return getHTML(URI.create(uri)).body();
+    }
 }
