@@ -5,14 +5,17 @@ public class Activity2 {
         sort(numbers);
         int n = numbers.length;
         if (n % 2 == 0) {
+            // even amount of elements, take the average of the two middle elements
             return ((float) (numbers[(n / 2) - 1] + numbers[n / 2])) / 2;
         } else {
+            // odd amount of elements, take the middle element
             return numbers[n / 2];
         }
     }
 
     // sorts the provided array in ascending numerical order
     private void sort(int[] numbers){
+        // selection sort
         for (int i = 0; i < numbers.length - 1; i++) {
             int min = i;
             for (int j = i + 1; j < numbers.length; j++) {
