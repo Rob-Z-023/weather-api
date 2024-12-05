@@ -1,7 +1,9 @@
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.*;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
 
@@ -10,11 +12,26 @@ public class WeatherApp {
     private final Scanner scanner;
     private final int favoriteLen = 3;
     private final Set<String> favorites;
+    private static final String filePath = "/favorites.txt"; // change later, incorrect behavior
 
     public WeatherApp(String appid) {
         weatherClient = new WeatherClient(appid);
         scanner = new Scanner(System.in);
         favorites = new HashSet<>(favoriteLen);
+
+        // reads the favorite file and loads it into set
+        try(BufferedReader fr = new BufferedReader(new FileReader(filePath))){
+            // there should only be one line in the file
+            String temp = fr.readLine();
+            favorites.addAll(List.of(temp.split(",")));
+        }
+        catch (FileNotFoundException e){
+            System.out.println("Favorite file is not found, starting with blank set");
+        }
+        catch (IOException e){
+            System.out.println("Error when trying to read file.");
+            e.printStackTrace();
+        }
     }
 
     // get the coordinates of the first search result of the API query
@@ -95,6 +112,29 @@ public class WeatherApp {
             output.append(getWeather(city)).append("\n");
         }
         return output.toString();
+    }
+
+    public void saveFavorites(){
+        File f = new File(filePath);
+        try{
+            if(!f.exists()){
+                f.createNewFile();
+            }
+        }
+        catch (IOException e) {
+            System.out.println("Warning, favorites not saved.");
+            e.printStackTrace();
+        }
+        try(FileWriter fw = new FileWriter(f)){
+            for(String str: favorites){
+                fw.write(str + ",");
+            }
+        }
+        catch (IOException e){
+            System.out.println("Warning, favorites not saved completely");
+            e.printStackTrace();
+        }
+
     }
 
     public int inputHandler(){
@@ -183,5 +223,7 @@ public class WeatherApp {
         WeatherApp app = new WeatherApp(APPID);
 
         while(app.inputHandler() != 0);
+
+        app.saveFavorites();
     }
 }
