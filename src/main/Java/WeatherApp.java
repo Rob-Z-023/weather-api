@@ -36,6 +36,7 @@ public class WeatherApp {
         return getWeather(getCoordinates(city));
     }
 
+    // add city to favorite if set is not full and city doesn't already exist
     public void addFavorite(String city) {
         if(favorites.contains(city)) {
             System.out.println("City already in favorite");
@@ -49,6 +50,7 @@ public class WeatherApp {
         System.out.println("City successfully added to favorite");
     }
 
+    // removes city from favorite set, do nothing if doesn't exist in set already
     public void removeFavorite(String city) {
         if(!favorites.contains(city)) {
             System.out.println("City not in favorite");
@@ -58,6 +60,7 @@ public class WeatherApp {
         System.out.println("City successfully removed from favorite");
     }
 
+    // gets the weather of all favorite cities
     public String listFavorites() {
         StringBuilder output = new StringBuilder();
         for(String city : favorites) {
@@ -65,7 +68,6 @@ public class WeatherApp {
         }
         return output.toString();
     }
-
 
     public int inputHandler(){
         String[] input = scanner.nextLine().toLowerCase().trim().split(" ");
@@ -114,6 +116,7 @@ public class WeatherApp {
         return 1;
     }
 
+    // displays the output of the help command
     private void help(){
         System.out.println("""
                 Get Weather Data
@@ -131,10 +134,12 @@ public class WeatherApp {
                 """);
     }
 
+    // handles error output
     private void inputError(){
         System.out.println("Invalid input");
     }
 
+    // rebuilds string from a string array with http space %20
     private String rebuild(String[] input, int start){
         StringBuilder output = new StringBuilder();
         for(int i = start; i < input.length; i++){
