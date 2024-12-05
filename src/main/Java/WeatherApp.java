@@ -12,7 +12,7 @@ public class WeatherApp {
     private final Scanner scanner;
     private final int favoriteLen = 3;
     private final Set<String> favorites;
-    private static final String filePath = "/favorites.txt"; // change later, incorrect behavior
+    private static final String filePath = "favorites.txt"; // change later, incorrect behavior
 
     public WeatherApp(String appid) {
         weatherClient = new WeatherClient(appid);
@@ -23,7 +23,12 @@ public class WeatherApp {
         try(BufferedReader fr = new BufferedReader(new FileReader(filePath))){
             // there should only be one line in the file
             String temp = fr.readLine();
-            favorites.addAll(List.of(temp.split(",")));
+            for(String str: temp.split(",")){
+                if(favorites.size() >= favoriteLen)
+                    break;
+                favorites.add(str);
+            }
+            System.out.println("Successfully loaded favorites from storage.");
         }
         catch (FileNotFoundException e){
             System.out.println("Favorite file is not found, starting with blank set");
@@ -32,6 +37,9 @@ public class WeatherApp {
             System.out.println("Error when trying to read file.");
             e.printStackTrace();
         }
+        System.out.println("Warning: closing this application any way other than the exit command will not save " +
+                "the favorites set");
+        System.out.println("Welcome to weather app, type \"help\" to view commands");
     }
 
     // get the coordinates of the first search result of the API query
