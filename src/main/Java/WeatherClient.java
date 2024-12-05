@@ -43,7 +43,7 @@ public class WeatherClient {
     // return the response body of the Weather get request
     public String getWeather(Coordinates coordinates){
         String uri = BASE_WEATHER_URL + "lat=" + coordinates.getLatitude() + "&lon=" + coordinates.getLongitude()
-                + "&appid=" + APPID;
+                + "&appid=" + APPID + "&units=imperial&lang=en";
 
         return getHTML(URI.create(uri)).body();
     }

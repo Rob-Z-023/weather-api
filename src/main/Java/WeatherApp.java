@@ -25,9 +25,36 @@ public class WeatherApp {
 
     // get the current weather data of the coordinate
     public String getWeather(Coordinates coordinates) {
-        //JSONObject cityObject = new JSONObject(weatherClient.getWeather(coordinates));
+        JSONObject cityObject = new JSONObject(weatherClient.getWeather(coordinates));
+        if(!cityObject.get("cod").toString().equals("200")){
+            return "Error " + cityObject.get("cod").toString() + "\nPlease check your city name and internet" +
+                    "connection";
+        }
         StringBuilder output = new StringBuilder();
-        output.append(weatherClient.getWeather(coordinates));
+
+        // output assembly
+        output.append("\n");
+        output.append(cityObject.get("name")).append(" - ")
+                .append(cityObject.getJSONObject("sys").get("country")).append("\n");
+        output.append("Descriptor         Value         Additional Info\n");
+
+        // general weather descriptor
+        JSONObject tempJSON = cityObject.getJSONArray("weather").getJSONObject(0);
+        output.append("Weather            ")
+                .append(tempJSON.get("main"))
+                .append("         ")
+                .append(tempJSON.get("description"))
+                .append("\n");
+
+        // temperature indicator
+        tempJSON = cityObject.getJSONObject("main");
+        output.append("Temperature        ").append(tempJSON.get("temp")).append("°F").append("\n");
+        output.append("Temp - min         ").append(tempJSON.get("temp_min")).append("°F").append("\n");
+        output.append("Temp - max         ").append(tempJSON.get("temp_max")).append("°F").append("\n");
+        output.append("Temp - feel        ").append(tempJSON.get("feels_like")).append("°F").append("\n");
+        output.append("Pressure           ").append(tempJSON.get("pressure")).append(" PSI").append("\n");
+        output.append("Humidity           ").append(tempJSON.get("humidity")).append("%").append("\n");
+
         return output.toString();
     }
 
@@ -50,7 +77,7 @@ public class WeatherApp {
         System.out.println("City successfully added to favorite");
     }
 
-    // removes city from favorite set, do nothing if doesn't exist in set already
+    // removes city from favorite set, do nothing if city doesn't exist in set already
     public void removeFavorite(String city) {
         if(!favorites.contains(city)) {
             System.out.println("City not in favorite");
