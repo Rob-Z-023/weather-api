@@ -1,18 +1,19 @@
 public class Coordinates{
-    private final String logtidue, latidude;
+    private final String latitude, longitude;
 
-    public Coordinates(String logtidue, String latidude) {
-        this.logtidue = logtidue;
-        this.latidude = latidude;
+    public Coordinates(String latitude, String longitude) {
+        this.longitude = longitude;
+        this.latitude = latitude;
     }
-    public String getLogtidue() {
-        return logtidue;
+    public String getLatitude(){
+        return latitude;
     }
-    public String getLatidude() {
-        return latidude;
+
+    public String getLongitude(){
+        return longitude;
     }
 
     public String toString() {
-        return "lat: " + latidude + "   lon: " + logtidue;
+        return "lat: " + latitude + "   lon: " + longitude;
     }
 }

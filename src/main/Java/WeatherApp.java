@@ -9,7 +9,7 @@ public class WeatherApp {
     private final WeatherClient weatherClient;
     private final Scanner scanner;
     private final int favoriteLen = 3;
-    private Set<String> favorites;
+    private final Set<String> favorites;
 
     public WeatherApp(String appid) {
         weatherClient = new WeatherClient(appid);
@@ -104,6 +104,7 @@ public class WeatherApp {
                     default:
                         inputError();
                 }
+                break;
 
             case "exit":
                 return 0;
