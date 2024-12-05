@@ -26,6 +26,7 @@ public class WeatherApp {
     // get the current weather data of the coordinate
     public String getWeather(Coordinates coordinates) {
         JSONObject cityObject = new JSONObject(weatherClient.getWeather(coordinates));
+        // make sure http request was successful;
         if(!cityObject.get("cod").toString().equals("200")){
             return "Error " + cityObject.get("cod").toString() + "\nPlease check your city name and internet" +
                     "connection";
@@ -52,7 +53,7 @@ public class WeatherApp {
         output.append("Temp - min         ").append(tempJSON.get("temp_min")).append("°F").append("\n");
         output.append("Temp - max         ").append(tempJSON.get("temp_max")).append("°F").append("\n");
         output.append("Temp - feel        ").append(tempJSON.get("feels_like")).append("°F").append("\n");
-        output.append("Pressure           ").append(tempJSON.get("pressure")).append(" PSI").append("\n");
+        output.append("Pressure           ").append(tempJSON.get("pressure")).append(" hPa").append("\n");
         output.append("Humidity           ").append(tempJSON.get("humidity")).append("%").append("\n");
 
         return output.toString();
