@@ -1,15 +1,20 @@
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.HashSet;
 import java.util.Scanner;
+import java.util.Set;
 
 public class WeatherApp {
     private final WeatherClient weatherClient;
     private final Scanner scanner;
+    private final int favoriteLen = 3;
+    private Set<String> favorites;
 
     public WeatherApp(String appid) {
         weatherClient = new WeatherClient(appid);
         scanner = new Scanner(System.in);
+        favorites = new HashSet<>(favoriteLen);
     }
 
     // get the coordinates of the first search result of the API query
@@ -31,6 +36,37 @@ public class WeatherApp {
         return getWeather(getCoordinates(city));
     }
 
+    public void addFavorite(String city) {
+        if(favorites.contains(city)) {
+            System.out.println("City already in favorite");
+            return;
+        }
+        if(favorites.size() >= favoriteLen) {
+            System.out.println("Your favorites list is full, please remove a city from the list.");
+            return;
+        }
+        favorites.add(city);
+        System.out.println("City successfully added to favorite");
+    }
+
+    public void removeFavorite(String city) {
+        if(!favorites.contains(city)) {
+            System.out.println("City not in favorite");
+            return;
+        }
+        favorites.remove(city);
+        System.out.println("City successfully removed from favorite");
+    }
+
+    public String listFavorites() {
+        StringBuilder output = new StringBuilder();
+        for(String city : favorites) {
+            output.append(getWeather(city)).append("\n");
+        }
+        return output.toString();
+    }
+
+
     public int inputHandler(){
         String[] input = scanner.nextLine().toLowerCase().trim().split(" ");
 
@@ -51,16 +87,23 @@ public class WeatherApp {
                 else System.out.println(getCoordinates(rebuild(input, 1)));
                 break;
 
-//            case "favorite":
-//                if(input.length < 2) inputError();
-//                switch (input[1]){
-//                    case "add":
-//                        if(input.length < 3) inputError();
-//                    case "remove":
-//                    case "list":
-//                    default:
-//                        inputError();
-//                }
+            case "favorite":
+                if(input.length < 2) inputError();
+                switch (input[1]){
+                    case "add":
+                        if(input.length < 3) inputError();
+                        addFavorite(rebuild(input, 2));
+                        break;
+                    case "remove":
+                        if(input.length < 3) inputError();
+                        removeFavorite(rebuild(input, 2));
+                        break;
+                    case "list":
+                        System.out.println(listFavorites());
+                        break;
+                    default:
+                        inputError();
+                }
 
             case "exit":
                 return 0;
@@ -71,14 +114,20 @@ public class WeatherApp {
     }
 
     private void help(){
-        System.out.println("Get Weather Data\n" +
-                " - get [City Name]\n\n" +
-                "Get City Cooridinate\n" +
-                " - getcord [City Name]\n\n" +
-                "Adds, removes, and lists your favorite cities\n" +
-                " - favorite (add/remove/list) [City Name]\n\n" +
-                "Exits program and saves favorites\n" +
-                " - exit\n\n");
+        System.out.println("""
+                Get Weather Data
+                 - get [City Name]
+                
+                Get City Cooridinate
+                 - getcord [City Name]
+                
+                Adds, removes, and lists your favorite cities
+                 - favorite (add/remove/list) [City Name]
+                
+                Exits program and saves favorites
+                 - exit
+                
+                """);
     }
 
     private void inputError(){
